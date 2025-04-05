@@ -1,14 +1,19 @@
 import React from "react";
 import Header from "@/app/components/Header";
-
-
+import Footer from "@/app/components/Footer";
 
 const TriviaPage = async () => {
   return (
-    <main>
+    <main className="flex flex-col min-h-screen">
       <Header />
-      <h1 className="text-2xl font-bold mb-4 p-4">Trivia Questions</h1>
-      
+
+      <div className="flex-grow"> 
+        {/* Main Content Goes Here */}
+      </div>
+
+
+      <hr />
+      <Footer className="absolute bottom-0 w-full" />
     </main>
   );
 };
