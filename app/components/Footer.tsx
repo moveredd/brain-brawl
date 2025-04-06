@@ -1,8 +1,10 @@
 import React from 'react';
 import Link from 'next/link';
 import Points from '@/app/components/PointsCount';
-
+import Github from '@/app/assets/Github.tsx';
 import { Bebas_Neue } from 'next/font/google';
+
+
 const BFont = Bebas_Neue({ subsets: ['latin'], weight: '400' });
 
 const CurrentDate = () => {
@@ -19,10 +21,13 @@ const Footer = () => {
           &copy; <CurrentDate /> BrainBrawl
         </h1>
 
-
-        <div className={`text-white px-6 py-3 rounded-lg bg-linear-to-r border to-cyan-500 from-blue-500 shadow-md  text-3xl ${BFont.className}`}>
-          Follow us on Socials
-        </div>
+        <Link href={'https://github.com/moveredd/brain-brawl'}>
+          <div className={`text-white px-6 py-3 rounded-lg bg-linear-to-r border to-cyan-500 from-blue-500 shadow-md  text-3xl ${BFont.className}`}>
+            Support us on Github
+            &nbsp;
+            <Github />
+          </div>
+        </Link>
       </nav>
       <hr />
     </footer> 
