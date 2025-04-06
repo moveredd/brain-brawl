@@ -1,5 +1,12 @@
 ## Getting Started
-First, install the dependencies:
+
+First, clone the repository and open it:
+```bash
+~$ git clone https://github.com/moveredd/brain-brawl.git
+~$ cd brain-brawl
+```
+Then, install the dependencies:
+
 
 ```bash
 npm install
@@ -7,7 +14,7 @@ npm install
 pnpm install
 ```
 
-Second, run the development server:
+Finally, run the development server:
 
 ```bash
 npm run dev
