@@ -17,11 +17,10 @@ const Header = () => {
           Brawl
         </h1>
 
-
         <Points />
 
 
-        <Link href="#">
+        <Link href="#" target="_blank">
           <button className={`bg-white text-black px-6 py-3 rounded-lg shadow-md hover:bg-gray-200 transition text-3xl ${BFont.className}`}>
             Start New Game
           </button>

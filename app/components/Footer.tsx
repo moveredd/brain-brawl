@@ -22,8 +22,8 @@ const Footer = () => {
         </h1>
 
         <Link href={'https://github.com/moveredd/brain-brawl'}>
-          <div className={`text-white px-6 py-3 rounded-lg bg-linear-to-r border to-cyan-500 from-blue-500 shadow-md  text-3xl ${BFont.className}`}>
-            Support us on Github
+          <div className={`text-white px-6 py-3 rounded-lg border shadow-md  text-3xl bg-gradient-to-r from-pink-500 to-yellow-500   ${BFont.className}`}>
+            leave a star on Github
             &nbsp;
             <Github />
           </div>
