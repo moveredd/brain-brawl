@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
-import Questions from "@/app/api/questions";
+import Questions from "@/app/api/Questions";
 
 const TriviaPage = async () => {
 
