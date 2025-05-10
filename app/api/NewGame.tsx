@@ -6,7 +6,7 @@ const NewGame = ({ onStartNewGame }) => {
   return (
     <div>
         <button
-          className={`bg-white text-black px-6 py-3 rounded-lg shadow-md hover:bg-gray-200 transition text-3xl absolute right-10 top-15 z-50 ${BFont.className}`}
+          className={`bg-white text-black px-6 py-3 rounded-lg shadow-md hover:bg-gray-200 transition text-3xl absolute right-10 top-[3rem] z-50 ${BFont.className}`}
           onClick={onStartNewGame}
         >
           Start New Game
