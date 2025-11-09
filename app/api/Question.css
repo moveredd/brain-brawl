@@ -1,0 +1,52 @@
+.quiz-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;      /* centra orizzontalmente */
+  gap: 20px;                /* distanza tra domanda e risposte */
+  background-color: #1e1e1e;
+  padding: 20px;
+  border-radius: 16px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.question-box {
+  border: 2px solid white;
+  padding: 20px;
+  font-size: 34;
+  color: white;
+  text-align: center;
+  border-radius: 12px;
+  width: 600px;        /* larghezza fissa */
+  height: 160px;       /* altezza fissa per tutte le domande */
+  display: flex;
+  align-items: center;    /* centra verticalmente il testo */
+  justify-content: center;/* centra orizzontalmente */
+}
+
+.answers-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  max-width: 600px;
+  align-items: center;   /* centra le risposte */
+}
+
+.answer-item {
+  background-color: #333;
+  color: white;
+  padding: 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: center;
+  width: 100%;
+  max-width: 400px;
+  transition: background 0.2s;
+}
+
+.answer-item:hover {
+  background-color: #555;
+}

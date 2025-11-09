@@ -1,140 +1,96 @@
 import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import "./Question.css"
+import Result from "./Result"
 
-function decodeHtml(html: string): string {
-  const txt = document.createElement('textarea');
-  txt.innerHTML = html;
-  return txt.value;
+interface Question{
+  question:string
+  correct:string
+  incorrect: string[]
 }
-
-type Question = {
-  question: string;
-  correct_answer: string;
-  incorrect_answers: string[];
+// Questions.tsx
+const Questions = ({ reloadFlag }: { reloadFlag: number }) => {
+  const [questions, setQuestions] = useState<any[]>([]);
+  const [indexQuestion, setIndexQuestion] = useState(0);
+  const [question, setQuestion] = useState('');
+  const [answers, setAnswers] = useState<string[]>([]);
+  const [correct, setCorrect]=useState(0)
+  const [loading, setLoading] = useState(false);
+  const [isFinished, setIsFinished]=useState(false)
+const fetchQuestions = async () => {
+  if (loading) return;
+  setLoading(true);
+  try {
+    const res = await axios.get(
+      "https://opentdb.com/api.php?amount=20&category=9&difficulty=easy&type=multiple"
+    );
+    setQuestions(res.data.results);
+    setIndexQuestion(0);
+    setCorrect(0);
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
+  }
 };
 
-type QuestionsProps = {
-  reloadFlag: number;
-};
-
-const Questions: React.FC<QuestionsProps> = ({ reloadFlag }) => {
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [userAnswers, setUserAnswers] = useState<string[]>([]);
-  const [showResults, setShowResults] = useState(false);
-
+  // Fetch delle domande al montaggio e quando cambia reloadFlag
   useEffect(() => {
-    async function fetchQuestions() {
-      setIsLoading(true);
-      setError(null);
-      setCurrentIndex(0);
-      setUserAnswers([]);
-      setShowResults(false);
-
-      try {
-        const response = await fetch(
-          'https://opentdb.com/api.php?amount=20&category=9&difficulty=easy&type=multiple'
-        );
-
-        if (!response.ok) throw new Error('HTTP error: ' + response.status);
-
-        const data = await response.json();
-        if (!Array.isArray(data.results)) {
-          throw new Error('Unexpected data format');
-        }
-
-        setQuestions(data.results);
-      } catch (err) {
-        console.error('Fetch error:', err);
-        setError('Errore nel caricamento delle domande');
-        setQuestions([]);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
     fetchQuestions();
   }, [reloadFlag]);
 
-  const handleAnswer = (answer: string) => {
-    setUserAnswers((prev) => [...prev, answer]);
-    if (currentIndex < questions.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setShowResults(true);
+  useEffect(() => {
+    if (!questions.length) return;
+    if(!(indexQuestion>=20)){
+      const current = questions[indexQuestion];
+      setQuestion(current.question);
+      setAnswers([...current.incorrect_answers, current.correct_answer].sort(() => Math.random() - 0.5));
     }
+  }, [questions, indexQuestion]);
+
+  const decodeHTML = (html: string) => {
+    const parser = new DOMParser();
+    const decoded = parser.parseFromString(html, "text/html");
+    return decoded.documentElement.textContent || "";
   };
 
-  const handleRisultati = () => {
-    const correctCount = userAnswers.filter(
-      (answer, index) => answer === questions[index].correct_answer
-    ).length;
-    alert(`you answered correcty ${correctCount}/${questions.length} question.`);
-  };
-  while(isLoading || questions.length === 0){
-    return 
+  const handleAnswer=(ans:string)=>{
+    if(ans===questions[indexQuestion].correct_answer){
+      setCorrect(prev=>prev+1)
+    }
+    if(indexQuestion+1>=20){
+      setIsFinished(true)
+    }else{
+      setIndexQuestion(prev=>prev+1)
+    }
   }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
-
-  const question = questions[currentIndex];
-  const answers = [...question.incorrect_answers, question.correct_answer].sort(
-    () => Math.random() - 0.5
-  );
-
   return (
-    <div className="p-6">
-      {showResults ? (
-        <div className="text-center text-xl font-semibold text-white-600">
-          you answered correcty to {' '}
-          {userAnswers.filter(
-            (a, i) => a === questions[i].correct_answer
-          ).length}{' '}
-          /{questions.length} questions!
-          <div className="mt-4">
-            <button
-              onClick={() => window.location.reload()}
-              className="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
-            >
-              NEW GAME
-            </button>
-          </div>
-        </div>
-      ) : (
-        <>
-          <div className="p-4 bg-zinc-100 shadow-md rounded-lg text-gray-700">
-            <div className="font-bold text-lg mb-2">
-              {decodeHtml(question.question)}
-            </div>
-            <div className="mb-2">Opzioni:</div>
-            <ul className="list-disc pl-5 space-y-1">
-              {answers.map((answer, i) => (
+     <div className="quiz-container">
+      
+      {
+        isFinished ? (
+          <Result correct={correct} />
+        ) : (
+          <div>
+            <div>{indexQuestion}/20</div>
+            <div className="question-box">{decodeHTML(question)}</div>
+            <ul className="answers-list">
+              {answers.map((ans, idx) => (
                 <li
-                  key={i}
-                  className="text-gray-600 cursor-pointer hover:underline"
-                  onClick={() => handleAnswer(answer)}
+                  key={idx}
+                  className="answer-item"
+                  onClick={() => handleAnswer(ans)}
                 >
-                  {decodeHtml(answer)}
+                  {decodeHTML(ans)}
                 </li>
               ))}
             </ul>
           </div>
-          <div className="mt-4 text-right">
-            {currentIndex === questions.length - 1 && (
-              <button
-                onClick={handleRisultati}
-              >
-                see results
-              </button>
-            )}
-          </div>
-        </>
-      )}
-    </div>
-  );
-};
+        )
+      }
+</div>
+)}
 
-export default Questions;
+
+
+export default Questions
