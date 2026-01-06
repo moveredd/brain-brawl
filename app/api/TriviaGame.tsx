@@ -3,6 +3,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import NewGame from '@/app/api/NewGame';
 
+<<<<<<< HEAD
 type Question = {
   question: string;
   correct_answer: string;
@@ -74,6 +75,15 @@ export default function TriviaGame() {
         error: err instanceof Error ? err.message : 'Failed to load questions',
       }));
     }
+=======
+export default function TriviaGame() {
+  const [reloadFlag, setReloadFlag] = useState(0);
+  const [gameStarted, setGameStarted]=useState(false)
+
+  const handleNewGame = useCallback(() => {
+    setReloadFlag(flag => flag + 1);
+    setGameStarted(true)
+>>>>>>> 453272f01425b8e529ce34c03512fd4bad61b1e3
   }, []);
 
   useEffect(() => {
@@ -201,6 +211,7 @@ export default function TriviaGame() {
   const progress = ((gameState.currentQuestionIndex + 1) / gameState.questions.length) * 100;
 
   return (
+<<<<<<< HEAD
     <div className="flex items-start justify-center w-full py-4 md:py-6">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 xl:px-12 flex flex-col">
         {/* Progress Bar */}
@@ -398,6 +409,10 @@ export default function TriviaGame() {
           <NewGame onStartNewGame={handleNewGame} />
         </div>
       </div>
+=======
+    <div>
+      <NewGame/>
+>>>>>>> 453272f01425b8e529ce34c03512fd4bad61b1e3
     </div>
   );
 }

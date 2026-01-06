@@ -1,0 +1,32 @@
+.quiz-container {
+  max-width: 600px;
+  margin: 40px auto;
+  font-family: sans-serif;
+  color: #fff;
+}
+
+.question-box {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 8px;
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.answers-list {
+  list-style: none;
+  padding: 0;
+}
+
+.answer-item {
+  background-color: #444;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.answer-item:hover {
+  background-color: #666;
+}

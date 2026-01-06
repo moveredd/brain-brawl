@@ -1,0 +1,15 @@
+.correct-box {
+  background-color: #2a2a2a;
+  color: #ffffff;
+  font-size: 34;                 /* grande come la domanda */
+  padding: 20px 40px;              /* spazio interno generoso */
+  border-radius: 16px;
+  width: 600px;                     /* larghezza fissa */
+  height: 160px;                    /* altezza fissa */
+  display: flex;
+  align-items: center;              /* centra verticalmente il testo */
+  justify-content: center;          /* centra orizzontalmente */
+  text-align: center;
+  margin: 40px auto;                /* centra orizzontalmente nella pagina */
+}
+
