@@ -202,7 +202,7 @@ export default function TriviaGame() {
 
   return (
     <div className="flex items-start justify-center w-full py-4 md:py-6">
-      <div className="max-w-4xl mx-auto w-full px-4 md:px-6 lg:px-8">
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 xl:px-12 flex flex-col">
         {/* Progress Bar */}
         <div className="mb-6 md:mb-8">
           <div className="flex justify-between items-center mb-2 md:mb-3">
@@ -221,83 +221,175 @@ export default function TriviaGame() {
           </div>
         </div>
 
-        {/* Question Card */}
-        <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-lg border border-purple-500/30 rounded-2xl md:rounded-3xl p-8 md:p-10 lg:p-12 xl:p-14 shadow-2xl mb-6">
-          <div className="mb-6 md:mb-8">
-            <span className="inline-block px-3 py-1 md:px-4 md:py-2 bg-purple-600/30 text-purple-300 text-xs md:text-sm font-semibold rounded-full mb-4">
-              {currentQuestion.category} • {currentQuestion.difficulty}
-            </span>
-          </div>
-          
-          <h2 className={`text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white leading-relaxed break-words ${gameState.showResult ? 'mb-6 md:mb-8' : 'mb-8 md:mb-10'}`}>
-            {decodeHtml(currentQuestion.question)}
-          </h2>
+        {/* Mobile Layout: Single card with question and answers */}
+        <div className="lg:hidden mb-6">
+          <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-lg border border-purple-500/30 rounded-2xl md:rounded-3xl p-8 md:p-10 lg:p-12 xl:p-14 shadow-2xl flex flex-col min-h-[500px] md:min-h-[550px]">
+            <div className="mb-6 md:mb-8">
+              <span className="inline-block px-3 py-1 md:px-4 md:py-2 bg-purple-600/30 text-purple-300 text-xs md:text-sm font-semibold rounded-full mb-4">
+                {currentQuestion.category} • {currentQuestion.difficulty}
+              </span>
+            </div>
+            
+            <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white leading-relaxed break-words mb-8 md:mb-10 min-h-[80px] md:min-h-[100px] flex items-start">
+              {decodeHtml(currentQuestion.question)}
+            </h2>
 
-          {/* Answers */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6">
-            {shuffledAnswers.map((answer, index) => {
-              const isSelected = gameState.selectedAnswer === answer;
-              const isCorrect = answer === currentQuestion.correct_answer;
-              const showCorrect = gameState.showResult && isCorrect;
-              const showIncorrect = gameState.showResult && isSelected && !isCorrect;
+            {/* Answers */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5 lg:gap-6 flex-shrink-0">
+              {shuffledAnswers.map((answer, index) => {
+                const isSelected = gameState.selectedAnswer === answer;
+                const isCorrect = answer === currentQuestion.correct_answer;
+                const showCorrect = gameState.showResult && isCorrect;
+                const showIncorrect = gameState.showResult && isSelected && !isCorrect;
 
-              let buttonClass = "p-5 md:p-6 lg:p-7 rounded-xl md:rounded-2xl font-semibold text-left transition-all transform hover:scale-105 text-sm md:text-base lg:text-lg ";
-              
-              if (gameState.showResult) {
-                if (showCorrect) {
-                  buttonClass += "bg-green-500/30 border-2 border-green-500 text-green-300";
-                } else if (showIncorrect) {
-                  buttonClass += "bg-red-500/30 border-2 border-red-500 text-red-300";
+                let buttonClass = "p-5 md:p-6 lg:p-7 rounded-xl md:rounded-2xl font-semibold text-left transition-all transform hover:scale-105 text-sm md:text-base lg:text-lg ";
+                
+                if (gameState.showResult) {
+                  if (showCorrect) {
+                    buttonClass += "bg-green-500/30 border-2 border-green-500 text-green-300";
+                  } else if (showIncorrect) {
+                    buttonClass += "bg-red-500/30 border-2 border-red-500 text-red-300";
+                  } else {
+                    buttonClass += "bg-gray-800/50 border border-gray-700 text-gray-400 opacity-60";
+                  }
                 } else {
-                  buttonClass += "bg-gray-800/50 border border-gray-700 text-gray-400 opacity-60";
+                  buttonClass += "bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-white hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400/50";
                 }
-              } else {
-                buttonClass += "bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-white hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400/50";
-              }
 
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleAnswerSelect(answer)}
-                  disabled={gameState.showResult}
-                  className={buttonClass}
-                >
-                  <span className="flex items-center break-words">
-                    <span className="mr-3 text-lg md:text-xl lg:text-2xl flex-shrink-0">
-                      {String.fromCharCode(65 + index)}.
+                return (
+                  <button
+                    key={index}
+                    onClick={() => handleAnswerSelect(answer)}
+                    disabled={gameState.showResult}
+                    className={buttonClass}
+                  >
+                    <span className="flex items-center break-words">
+                      <span className="mr-3 text-lg md:text-xl lg:text-2xl flex-shrink-0">
+                        {String.fromCharCode(65 + index)}.
+                      </span>
+                      <span className="break-words">{decodeHtml(answer)}</span>
                     </span>
-                    <span className="break-words">{decodeHtml(answer)}</span>
-                  </span>
-                </button>
-              );
-            })}
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* Result Message and Next Button - Reserved space to prevent layout shift */}
+            <div className="mt-6 md:mt-8 min-h-[140px] md:min-h-[160px] flex-shrink-0">
+              {gameState.showResult && (
+                <div className="space-y-4">
+                  <div className={`p-4 md:p-5 rounded-xl ${
+                    gameState.isCorrect 
+                      ? 'bg-green-500/20 border border-green-500/50' 
+                      : 'bg-red-500/20 border border-red-500/50'
+                  }`}>
+                    <p className={`text-base md:text-lg font-semibold break-words ${
+                      gameState.isCorrect ? 'text-green-300' : 'text-red-300'
+                    }`}>
+                      {gameState.isCorrect ? '✓ Correct!' : `✗ Incorrect. The correct answer was: ${decodeHtml(currentQuestion.correct_answer)}`}
+                    </p>
+                  </div>
+                  <button
+                    onClick={handleNextQuestion}
+                    className="w-full px-6 py-3 md:px-8 cursor-pointer md:py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-lg hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg"
+                  >
+                    {gameState.currentQuestionIndex < gameState.questions.length - 1 
+                      ? 'Next Question' 
+                      : 'Finish Game'}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Desktop Layout: Two-column Grid */}
+        <div className="hidden lg:grid grid-cols-3 gap-8 xl:gap-12 mb-6">
+          {/* Question Card - Left side on desktop (2 columns) */}
+          <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-lg border border-purple-500/30 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 xl:p-12 shadow-2xl flex flex-col col-span-2 min-h-[600px]">
+            <div className="mb-4 md:mb-6">
+              <span className="inline-block px-3 py-1 md:px-4 md:py-2 bg-purple-600/30 text-purple-300 text-xs md:text-sm font-semibold rounded-full mb-4">
+                {currentQuestion.category} • {currentQuestion.difficulty}
+              </span>
+            </div>
+            
+            <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white leading-relaxed break-words mb-6 md:mb-8 min-h-[80px] md:min-h-[100px] lg:min-h-[120px] flex items-start">
+              {decodeHtml(currentQuestion.question)}
+            </h2>
+
+            {/* Result Message */}
+            {gameState.showResult && (
+              <div className={`mt-auto p-4 md:p-5 rounded-xl ${
+                gameState.isCorrect 
+                  ? 'bg-green-500/20 border border-green-500/50' 
+                  : 'bg-red-500/20 border border-red-500/50'
+              }`}>
+                <p className={`text-base md:text-lg font-semibold break-words ${
+                  gameState.isCorrect ? 'text-green-300' : 'text-red-300'
+                }`}>
+                  {gameState.isCorrect ? '✓ Correct!' : `✗ Incorrect. The correct answer was: ${decodeHtml(currentQuestion.correct_answer)}`}
+                </p>
+              </div>
+            )}
           </div>
 
-          {/* Result Message and Next Button - Reserved space to prevent layout shift */}
-          <div className="mt-6 md:mt-8 min-h-[140px] md:min-h-[160px]">
-            {gameState.showResult && (
-              <div className="space-y-4">
-                <div className={`p-4 md:p-5 rounded-xl ${
-                  gameState.isCorrect 
-                    ? 'bg-green-500/20 border border-green-500/50' 
-                    : 'bg-red-500/20 border border-red-500/50'
-                }`}>
-                  <p className={`text-base md:text-lg font-semibold break-words ${
-                    gameState.isCorrect ? 'text-green-300' : 'text-red-300'
-                  }`}>
-                    {gameState.isCorrect ? '✓ Correct!' : `✗ Incorrect. The correct answer was: ${decodeHtml(currentQuestion.correct_answer)}`}
-                  </p>
-                </div>
+          {/* Answers Card - Right side on desktop (1 column) */}
+          <div className="col-span-1 flex flex-col">
+            <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-lg border border-purple-500/30 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 shadow-2xl flex flex-col min-h-[600px]">
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-4 md:mb-6">Answers</h3>
+              
+              {/* Answers */}
+              <div className="flex flex-col gap-3 md:gap-4 flex-grow">
+                {shuffledAnswers.map((answer, index) => {
+                  const isSelected = gameState.selectedAnswer === answer;
+                  const isCorrect = answer === currentQuestion.correct_answer;
+                  const showCorrect = gameState.showResult && isCorrect;
+                  const showIncorrect = gameState.showResult && isSelected && !isCorrect;
+
+                  let buttonClass = "p-4 md:p-5 lg:p-6 rounded-xl md:rounded-2xl font-semibold text-left transition-all transform hover:scale-105 text-sm md:text-base lg:text-lg flex-shrink-0 ";
+                  
+                  if (gameState.showResult) {
+                    if (showCorrect) {
+                      buttonClass += "bg-green-500/30 border-2 border-green-500 text-green-300";
+                    } else if (showIncorrect) {
+                      buttonClass += "bg-red-500/30 border-2 border-red-500 text-red-300";
+                    } else {
+                      buttonClass += "bg-gray-800/50 border border-gray-700 text-gray-400 opacity-60";
+                    }
+                  } else {
+                    buttonClass += "bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-white hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400/50";
+                  }
+
+                  return (
+                    <button
+                      key={index}
+                      onClick={() => handleAnswerSelect(answer)}
+                      disabled={gameState.showResult}
+                      className={buttonClass}
+                    >
+                      <span className="flex items-center break-words">
+                        <span className="mr-3 text-lg md:text-xl lg:text-2xl flex-shrink-0">
+                          {String.fromCharCode(65 + index)}.
+                        </span>
+                        <span className="break-words">{decodeHtml(answer)}</span>
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Next Button - At bottom of answers card */}
+              {gameState.showResult && (
                 <button
                   onClick={handleNextQuestion}
-                  className="w-full px-6 py-3 md:px-8 cursor-pointer md:py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-lg hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg"
+                  className="mt-auto px-6 py-3 md:px-8 cursor-pointer md:py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-lg hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg w-full"
                 >
                   {gameState.currentQuestionIndex < gameState.questions.length - 1 
                     ? 'Next Question' 
                     : 'Finish Game'}
                 </button>
-              </div>
-            )}
+              )}
+            </div>
           </div>
         </div>
 
