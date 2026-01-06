@@ -20,7 +20,7 @@ export async function GET(request: Request) {
     
     if (data.response_code !== 0) {
       return NextResponse.json(
-        { error: 'Failed to fetch questions. Please try again.' },
+        { error: 'Failed to fetch questions. Please try again...' },
         { status: 500 }
       );
     }
