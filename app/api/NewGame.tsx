@@ -1,18 +1,16 @@
-import React from 'react'
-import { Bebas_Neue } from 'next/font/google';
-const BFont = Bebas_Neue({ subsets: ['latin'], weight: '400' });
+'use client';
 
-const NewGame = ({ onStartNewGame }) => {
+import React from 'react';
+
+const NewGame = ({ onStartNewGame }: { onStartNewGame: () => void }) => {
   return (
-    <div>
-        <button
-          className={`bg-white text-black px-6 py-3 rounded-lg shadow-md hover:bg-gray-200 transition text-3xl absolute right-10 top-15 z-50 ${BFont.className}`}
-          onClick={onStartNewGame}
-        >
-          Start New Game
-        </button>
-    </div>
-  )
-}
+    <button
+      className="w-full px-6 py-3 md:px-8 md:py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-lg lg:text-xl hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-xl backdrop-blur-sm border-2 border-purple-400/50 hover:border-purple-300/70"
+      onClick={onStartNewGame}
+    >
+      🎮 New Game
+    </button>
+  );
+};
 
-export default NewGame
+export default NewGame;

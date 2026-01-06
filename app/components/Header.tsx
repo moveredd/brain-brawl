@@ -1,26 +1,17 @@
 import React from 'react';
-import Link from 'next/link';
-
-import { Bebas_Neue } from 'next/font/google';
-const BFont = Bebas_Neue({ subsets: ['latin'], weight: '400' });
 
 const Header = () => {
   return (
-    <>
-    <header className="relative w-full z-50 ">
-      <nav className="bg-black h-[10rem] flex items-center justify-between px-10 bg-linear-to-t from-sky-500 to-indigo-500">
-                
-        <h1 className={`text-white text-4xl ${BFont.className}`}>
-          Brain
-          <span className='inline-block text-4xl'>🧠</span>
-          Brawl
-        </h1>
-
-
+    <header className="relative w-full z-50 border-b border-purple-500/20">
+      <nav className="bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20 backdrop-blur-lg min-h-20 md:min-h-24 flex items-center justify-center px-4 md:px-6 py-4 md:py-6">
+        <div className="flex items-center space-x-2 md:space-x-3">
+          <span className="text-4xl md:text-5xl lg:text-6xl animate-pulse">🧠</span>
+          <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-400 bg-clip-text text-transparent">
+            Brain Brawl
+          </h1>
+        </div>
       </nav>
-      <hr />
-    </header> 
-    </>
+    </header>
   );
 };
 
