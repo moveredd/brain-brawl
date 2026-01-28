@@ -1,12 +1,13 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0a0a0f;
-  --foreground: #ffffff;
-  --purple-primary: #9333ea;
+  --background: #020617;
+  --foreground: #f9fafb;
+  --purple-primary: #a855f7;
   --pink-primary: #ec4899;
-  --gradient-start: #9333ea;
-  --gradient-end: #ec4899;
+  --accent-cyan: #22d3ee;
+  --accent-amber: #f59e0b;
+  --card-bg: rgba(15, 23, 42, 0.96);
 }
 
 @theme inline {
@@ -14,4 +15,22 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Utility refinements for a more “app-like” feel */
+.glass-panel {
+  @apply bg-slate-900/80 backdrop-blur-xl border border-slate-700/60 shadow-[0_18px_60px_rgba(15,23,42,0.85)] rounded-3xl;
+}
+
+.pill-badge {
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium uppercase tracking-wide;
+}
+
+.focus-ring {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-purple-500/80 focus-visible:ring-offset-slate-950;
 }

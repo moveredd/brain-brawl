@@ -1,35 +1,37 @@
-import React from 'react';
-import Link from 'next/link';
-import Github from '@/app/assets/Github';
-
-const CurrentDate = () => {
-  return <span>{new Date().getFullYear()}</span>;
-};
+import React from "react";
+import Link from "next/link";
+import Github from "@/app/assets/Github";
 
 const Footer = () => {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="relative z-50 mt-auto border-t border-purple-500/20">
-  <nav className="bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20 backdrop-blur-lg min-h-24 flex items-center py-6">
-    <div className="w-full mx-auto px-8 md:px-12 lg:px-24 flex items-center justify-between">
-      <h2 className="text-base md:text-xl lg:text-2xl text-gray-300 font-medium">
-        &copy; <CurrentDate /> Brain Brawl
-      </h2>
-
-      <Link
-        href="https://github.com/moveredd/brain-brawl"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group flex-shrink-0"
-      >
-        <div className="flex items-center space-x-2 md:space-x-3 px-4 py-2 md:px-5 md:py-3 rounded-xl bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-white hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400/50 transition-all transform hover:scale-105 whitespace-nowrap">
-          <span className="text-base md:text-lg font-semibold">Leave a star on GitHub</span>
-          <Github />
+    <footer className="relative mt-auto border-t border-slate-800/80 bg-slate-950/40">
+      <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-5 text-xs text-slate-500/80 sm:flex-row sm:items-center sm:justify-between sm:text-[13px] md:px-6 lg:px-8">
+        <div className="flex items-center gap-2 text-slate-400/90">
+          <span className="mr-1 text-base text-purple-400/90">◎</span>
+          <span>
+            © {year} <span className="font-medium text-slate-100">Brain Brawl</span>.{" "}
+            Intelligence, on demand.
+          </span>
         </div>
-      </Link>
-    </div>
-  </nav>
-</footer>
 
+        <div className="flex items-center gap-3">
+          <span className="hidden text-[11px] uppercase tracking-wide text-slate-500/90 sm:inline">
+            Open Source
+          </span>
+          <Link
+            href="https://github.com/moveredd/brain-brawl"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group focus-ring inline-flex items-center gap-2 rounded-full border border-purple-500/40 bg-slate-900/70 px-4 py-2 text-[11px] font-medium text-slate-100 transition-all hover:-translate-y-0.5 hover:border-purple-400/70 hover:bg-slate-900/90 hover:shadow-[0_0_40px_rgba(168,85,247,0.7)] sm:text-xs"
+          >
+            <Github />
+            <span>Star on GitHub</span>
+          </Link>
+        </div>
+      </div>
+    </footer>
   );
 };
 
