@@ -307,7 +307,7 @@ export default function TriviaGame() {
           <button
             type="button"
             onClick={handleNewGame}
-            className="focus-ring mt-2 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white shadow-[0_0_32px_rgba(168,85,247,0.7)] transition-transform hover:-translate-y-0.5"
+            className="focus-ring mt-2 inline-flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
           >
             Start game
           </button>
