@@ -1,72 +1,14 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  // Image optimization (for external images)
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: '**',
-      },
-    ],
-  },
+import type { NextConfig } from 'next';
 
-  // Turbopack optimizations (faster builds)
+const nextConfig: NextConfig = {
+  /**
+   * @type {boolean | 'error'}
+   * If true, Next.js will show an error if you try to use the pages directory
+   * when the app directory is detected.
+   */
   experimental: {
-    optimizePackageImports: [
-      'lucide-react',
-      'class-variance-authority',
-      'clsx',
-      'tailwind-merge',
-    ],
-    typedRoutes: true,
-    optimizeCss: true,
-  },
-
-  // Vercel/Production optimizations
-  output: 'standalone',
-  swcMinify: true,
-  compress: true,
-
-  // Bundle analyzer (remove in production)
-  // webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-  //   config.resolve.alias = {
-  //     ...config.resolve.alias,
-  //     '@/*': path.resolve(__dirname, 'src'),
-  //   };
-  //   return config;
-  // },
-
-  // Security headers
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-        ],
-      },
-    ];
-  },
-
-  // Environment variables
-  env: {
-    CUSTOM_KEY: process.env.CUSTOM_KEY,
+    appDir: true,
   },
 };
 
-const nextConfigWithPlugins = {
-  ...nextConfig,
-};
-
-module.exports = nextConfigWithPlugins;
+export default nextConfig;
