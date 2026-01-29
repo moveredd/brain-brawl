@@ -1,11 +1,18 @@
-import React from "react";
-import Header from "@/app/components/Header";
-import Footer from "@/app/components/Footer";
-import TriviaGame from "@/app/components/TriviaGame";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import TriviaGame from "./components/TriviaGame";
+import { Bungee } from "next/font/google";
+
+const bungee = Bungee({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-bungee",
+  display: "swap",
+});
 
 const TriviaPage = () => {
   return (
-    <main className="flex min-h-screen flex-col">
+    <main className={`${bungee.variable} flex min-h-screen flex-col`}>
       <Header />
 
       <div className="flex flex-1 items-start justify-center px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
@@ -16,10 +23,13 @@ const TriviaPage = () => {
             </p>
             <h1 className="text-2xl font-semibold tracking-tight text-slate-50 sm:text-3xl md:text-4xl">
               Welcome to{" "}
-              <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-purple-100 bg-clip-text text-transparent">
+              <span
+                className="bg-gradient-to-r from-purple-300 via-pink-300 to-purple-100 bg-clip-text text-transparent"
+                style={{ fontFamily: "var(--font-bungee)" }}
+              >
                 Brain Brawl
               </span>
-              .
+
             </h1>
             <p className="mt-3 text-sm text-slate-300 sm:text-base">
               A fast-paced trivia arena where you race through curated
