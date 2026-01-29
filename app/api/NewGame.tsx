@@ -1,61 +1,59 @@
 'use client';
-<<<<<<< HEAD
-
-import React from 'react';
-
-const NewGame = ({ onStartNewGame }: { onStartNewGame: () => void }) => {
-  return (
-    <button
-      className="w-full px-6 py-3 md:px-8 md:py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-lg lg:text-xl hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-xl backdrop-blur-sm border-2 border-purple-400/50 hover:border-purple-300/70"
-      onClick={onStartNewGame}
-    >
-      🎮 New Game
-    </button>
-=======
 
 import React, { useState } from 'react';
 import { Bebas_Neue } from 'next/font/google';
-import Questions from './Questions';
 
 const BFont = Bebas_Neue({ subsets: ['latin'], weight: '400' });
 
-const NewGame = () => {
+interface NewGameProps {
+  onStartNewGame?: () => void;
+}
+
+const NewGame = ({ onStartNewGame }: NewGameProps) => {
   const [gameStarted, setGameStarted] = useState(false);
-  const [reloadFlag, setReloadFlag] = useState(0); // <-- serve per ri-render di Questions
+  const [reloadFlag, setReloadFlag] = useState(0);
 
   const handleStartNewGame = () => {
-    setReloadFlag(prev => prev + 1); // forza il refresh
+    setReloadFlag(prev => prev + 1);
     setGameStarted(true);
+    onStartNewGame?.(); // Optional callback to parent component
   };
 
   const handleRestart = () => {
+    setReloadFlag(0);
     setGameStarted(false);
+    onStartNewGame?.(); // Trigger parent restart if provided
   };
 
-  const buttonStyle = "px-10 py-6 rounded-full shadow-lg text-4xl transition-all duration-200";
+  const buttonStyle = "px-10 py-6 rounded-full shadow-lg text-4xl transition-all duration-200 font-bold uppercase tracking-wide";
 
   return (
-    <div className="relative p-8 flex flex-col items-center gap-6">
+    <div className="relative p-8 flex flex-col items-center gap-6 w-full">
       {!gameStarted ? (
         <button
-          className={`${buttonStyle} bg-green-600 text-white hover:bg-green-700 ${BFont.className}`}
+          className={`${buttonStyle} bg-gradient-to-r from-green-600 to-green-500 text-white hover:from-green-700 hover:to-green-600 border-2 border-green-400/50 hover:border-green-300/70 transform hover:scale-105 active:scale-95 ${BFont.className}`}
           onClick={handleStartNewGame}
         >
-          Start New Game
+          🎮 Start New Game
         </button>
       ) : (
         <>
-          <Questions reloadFlag={reloadFlag} />
+          <div className="flex flex-col items-center gap-4 w-full max-w-md">
+            <div className="w-full h-px bg-gradient-to-r from-purple-500/50 to-pink-500/50" />
+            <p className="text-lg font-semibold text-gray-300 text-center">
+              Ready for another round?
+            </p>
+          </div>
+          
           <button
-            className={`${buttonStyle} bg-red-600 text-white hover:bg-red-700 ${BFont.className}`}
+            className={`${buttonStyle} bg-gradient-to-r from-red-600 to-red-500 text-white hover:from-red-700 hover:to-red-600 border-2 border-red-400/50 hover:border-red-300/70 transform hover:scale-105 active:scale-95 ${BFont.className}`}
             onClick={handleRestart}
           >
-            Restart
+            🔄 Restart Game
           </button>
         </>
       )}
     </div>
->>>>>>> 453272f01425b8e529ce34c03512fd4bad61b1e3
   );
 };
 
