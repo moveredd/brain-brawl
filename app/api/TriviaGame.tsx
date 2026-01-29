@@ -3,7 +3,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import NewGame from '@/app/api/NewGame';
 
-<<<<<<< HEAD
 type Question = {
   question: string;
   correct_answer: string;
@@ -41,23 +40,25 @@ export default function TriviaGame() {
     error: null,
   });
   const [shuffledAnswers, setShuffledAnswers] = useState<string[]>([]);
+  const [reloadFlag, setReloadFlag] = useState(0);
+  const [gameStarted, setGameStarted] = useState(false);
 
   const fetchQuestions = useCallback(async () => {
     setGameState(prev => ({ ...prev, isLoading: true, error: null }));
-    
+
     try {
       const response = await fetch('/api/questions?amount=10&difficulty=medium');
-      
+
       if (!response.ok) {
         throw new Error('Failed to fetch questions');
       }
-      
+
       const data = await response.json();
-      
+
       if (data.response_code !== 0 || !data.results) {
         throw new Error('No questions available');
       }
-      
+
       setGameState(prev => ({
         ...prev,
         questions: data.results,
@@ -75,28 +76,32 @@ export default function TriviaGame() {
         error: err instanceof Error ? err.message : 'Failed to load questions',
       }));
     }
-=======
-export default function TriviaGame() {
-  const [reloadFlag, setReloadFlag] = useState(0);
-  const [gameStarted, setGameStarted]=useState(false)
+  }, []);
 
   const handleNewGame = useCallback(() => {
     setReloadFlag(flag => flag + 1);
-    setGameStarted(true)
->>>>>>> 453272f01425b8e529ce34c03512fd4bad61b1e3
-  }, []);
-
-  useEffect(() => {
+    setGameStarted(true);
     fetchQuestions();
   }, [fetchQuestions]);
 
+  useEffect(() => {
+    if (gameStarted) {
+      fetchQuestions();
+    }
+  }, [fetchQuestions, reloadFlag, gameStarted]);
+
   // Shuffle answers when question changes
   useEffect(() => {
-    if (gameState.questions.length > 0 && gameState.currentQuestionIndex < gameState.questions.length) {
+    if (
+      gameState.questions.length > 0 &&
+      gameState.currentQuestionIndex < gameState.questions.length
+    ) {
       const currentQuestion = gameState.questions[gameState.currentQuestionIndex];
       if (currentQuestion) {
-        const answers = [...currentQuestion.incorrect_answers, currentQuestion.correct_answer]
-          .sort(() => Math.random() - 0.5);
+        const answers = [
+          ...currentQuestion.incorrect_answers,
+          currentQuestion.correct_answer,
+        ].sort(() => Math.random() - 0.5);
         setShuffledAnswers(answers);
       }
     }
@@ -104,10 +109,10 @@ export default function TriviaGame() {
 
   const handleAnswerSelect = (answer: string) => {
     if (gameState.showResult) return;
-    
+
     const currentQuestion = gameState.questions[gameState.currentQuestionIndex];
     const isCorrect = answer === currentQuestion.correct_answer;
-    
+
     setGameState(prev => ({
       ...prev,
       selectedAnswer: answer,
@@ -135,11 +140,8 @@ export default function TriviaGame() {
     }
   };
 
-  const handleNewGame = () => {
-    fetchQuestions();
-  };
-
-  if (gameState.isLoading) {
+  // Loading state
+  if (gameState.isLoading && !gameStarted) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center space-y-4">
@@ -150,6 +152,7 @@ export default function TriviaGame() {
     );
   }
 
+  // Error state
   if (gameState.error) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
@@ -166,7 +169,8 @@ export default function TriviaGame() {
     );
   }
 
-  if (gameState.questions.length === 0) {
+  // Initial / no questions yet
+  if (!gameStarted || gameState.questions.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <button
@@ -181,16 +185,21 @@ export default function TriviaGame() {
 
   // Game finished
   if (gameState.currentQuestionIndex >= gameState.questions.length) {
-    const percentage = Math.round((gameState.score / gameState.questions.length) * 100);
-    
+    const percentage = Math.round(
+      (gameState.score / gameState.questions.length) * 100
+    );
+
     return (
       <div className="flex items-center justify-center min-h-[60vh] py-8">
         <div className="text-center space-y-6 p-6 md:p-10 lg:p-12 bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-lg border border-purple-500/30 rounded-3xl shadow-2xl max-w-lg w-full mx-4">
           <div className="text-5xl md:text-6xl lg:text-7xl mb-4">🎉</div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">Game Complete!</h2>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4">
+            Game Complete!
+          </h2>
           <div className="space-y-3 md:space-y-4">
             <p className="text-xl md:text-2xl lg:text-3xl text-gray-300 break-words">
-              Score: <span className="text-purple-400 font-bold">{gameState.score}</span> / <span className="text-white">{gameState.questions.length}</span>
+              Score: <span className="text-purple-400 font-bold">{gameState.score}</span> /{' '}
+              <span className="text-white">{gameState.questions.length}</span>
             </p>
             <p className="text-lg md:text-xl lg:text-2xl text-gray-400 break-words">
               Accuracy: <span className="text-pink-400 font-bold">{percentage}%</span>
@@ -208,10 +217,10 @@ export default function TriviaGame() {
   }
 
   const currentQuestion = gameState.questions[gameState.currentQuestionIndex];
-  const progress = ((gameState.currentQuestionIndex + 1) / gameState.questions.length) * 100;
+  const progress =
+    ((gameState.currentQuestionIndex + 1) / gameState.questions.length) * 100;
 
   return (
-<<<<<<< HEAD
     <div className="flex items-start justify-center w-full py-4 md:py-6">
       <div className="w-full max-w-7xl mx-auto px-4 md:px-6 lg:px-8 xl:px-12 flex flex-col">
         {/* Progress Bar */}
@@ -232,7 +241,7 @@ export default function TriviaGame() {
           </div>
         </div>
 
-        {/* Mobile Layout: Single card with question and answers */}
+        {/* Mobile Layout */}
         <div className="lg:hidden mb-6">
           <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-lg border border-purple-500/30 rounded-2xl md:rounded-3xl p-8 md:p-10 lg:p-12 xl:p-14 shadow-2xl flex flex-col min-h-[500px] md:min-h-[550px]">
             <div className="mb-6 md:mb-8">
@@ -240,7 +249,7 @@ export default function TriviaGame() {
                 {currentQuestion.category} • {currentQuestion.difficulty}
               </span>
             </div>
-            
+
             <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white leading-relaxed break-words mb-8 md:mb-10 min-h-[80px] md:min-h-[100px] flex items-start">
               {decodeHtml(currentQuestion.question)}
             </h2>
@@ -251,20 +260,26 @@ export default function TriviaGame() {
                 const isSelected = gameState.selectedAnswer === answer;
                 const isCorrect = answer === currentQuestion.correct_answer;
                 const showCorrect = gameState.showResult && isCorrect;
-                const showIncorrect = gameState.showResult && isSelected && !isCorrect;
+                const showIncorrect =
+                  gameState.showResult && isSelected && !isCorrect;
 
-                let buttonClass = "p-5 md:p-6 lg:p-7 rounded-xl md:rounded-2xl font-semibold text-left transition-all transform hover:scale-105 text-sm md:text-base lg:text-lg ";
-                
+                let buttonClass =
+                  'p-5 md:p-6 lg:p-7 rounded-xl md:rounded-2xl font-semibold text-left transition-all transform hover:scale-105 text-sm md:text-base lg:text-lg ';
+
                 if (gameState.showResult) {
                   if (showCorrect) {
-                    buttonClass += "bg-green-500/30 border-2 border-green-500 text-green-300";
+                    buttonClass +=
+                      'bg-green-500/30 border-2 border-green-500 text-green-300';
                   } else if (showIncorrect) {
-                    buttonClass += "bg-red-500/30 border-2 border-red-500 text-red-300";
+                    buttonClass +=
+                      'bg-red-500/30 border-2 border-red-500 text-red-300';
                   } else {
-                    buttonClass += "bg-gray-800/50 border border-gray-700 text-gray-400 opacity-60";
+                    buttonClass +=
+                      'bg-gray-800/50 border border-gray-700 text-gray-400 opacity-60';
                   }
                 } else {
-                  buttonClass += "bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-white hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400/50";
+                  buttonClass +=
+                    'bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-white hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400/50';
                 }
 
                 return (
@@ -285,27 +300,36 @@ export default function TriviaGame() {
               })}
             </div>
 
-            {/* Result Message and Next Button - Reserved space to prevent layout shift */}
+            {/* Result + Next */}
             <div className="mt-6 md:mt-8 min-h-[140px] md:min-h-[160px] flex-shrink-0">
               {gameState.showResult && (
                 <div className="space-y-4">
-                  <div className={`p-4 md:p-5 rounded-xl ${
-                    gameState.isCorrect 
-                      ? 'bg-green-500/20 border border-green-500/50' 
-                      : 'bg-red-500/20 border border-red-500/50'
-                  }`}>
-                    <p className={`text-base md:text-lg font-semibold break-words ${
-                      gameState.isCorrect ? 'text-green-300' : 'text-red-300'
-                    }`}>
-                      {gameState.isCorrect ? '✓ Correct!' : `✗ Incorrect. The correct answer was: ${decodeHtml(currentQuestion.correct_answer)}`}
+                  <div
+                    className={`p-4 md:p-5 rounded-xl ${
+                      gameState.isCorrect
+                        ? 'bg-green-500/20 border border-green-500/50'
+                        : 'bg-red-500/20 border border-red-500/50'
+                    }`}
+                  >
+                    <p
+                      className={`text-base md:text-lg font-semibold break-words ${
+                        gameState.isCorrect ? 'text-green-300' : 'text-red-300'
+                      }`}
+                    >
+                      {gameState.isCorrect
+                        ? '✓ Correct!'
+                        : `✗ Incorrect. The correct answer was: ${decodeHtml(
+                            currentQuestion.correct_answer
+                          )}`}
                     </p>
                   </div>
                   <button
                     onClick={handleNextQuestion}
                     className="w-full px-6 py-3 md:px-8 cursor-pointer md:py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-lg hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg"
                   >
-                    {gameState.currentQuestionIndex < gameState.questions.length - 1 
-                      ? 'Next Question' 
+                    {gameState.currentQuestionIndex <
+                    gameState.questions.length - 1
+                      ? 'Next Question'
                       : 'Finish Game'}
                   </button>
                 </div>
@@ -314,61 +338,75 @@ export default function TriviaGame() {
           </div>
         </div>
 
-        {/* Desktop Layout: Two-column Grid */}
+        {/* Desktop Layout */}
         <div className="hidden lg:grid grid-cols-3 gap-8 xl:gap-12 mb-6">
-          {/* Question Card - Left side on desktop (2 columns) */}
+          {/* Question card */}
           <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-lg border border-purple-500/30 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 xl:p-12 shadow-2xl flex flex-col col-span-2 min-h-[600px]">
             <div className="mb-4 md:mb-6">
               <span className="inline-block px-3 py-1 md:px-4 md:py-2 bg-purple-600/30 text-purple-300 text-xs md:text-sm font-semibold rounded-full mb-4">
                 {currentQuestion.category} • {currentQuestion.difficulty}
               </span>
             </div>
-            
+
             <h2 className="text-xl md:text-2xl lg:text-3xl xl:text-4xl font-bold text-white leading-relaxed break-words mb-6 md:mb-8 min-h-[80px] md:min-h-[100px] lg:min-h-[120px] flex items-start">
               {decodeHtml(currentQuestion.question)}
             </h2>
 
-            {/* Result Message */}
             {gameState.showResult && (
-              <div className={`mt-auto p-4 md:p-5 rounded-xl ${
-                gameState.isCorrect 
-                  ? 'bg-green-500/20 border border-green-500/50' 
-                  : 'bg-red-500/20 border border-red-500/50'
-              }`}>
-                <p className={`text-base md:text-lg font-semibold break-words ${
-                  gameState.isCorrect ? 'text-green-300' : 'text-red-300'
-                }`}>
-                  {gameState.isCorrect ? '✓ Correct!' : `✗ Incorrect. The correct answer was: ${decodeHtml(currentQuestion.correct_answer)}`}
+              <div
+                className={`mt-auto p-4 md:p-5 rounded-xl ${
+                  gameState.isCorrect
+                    ? 'bg-green-500/20 border border-green-500/50'
+                    : 'bg-red-500/20 border border-red-500/50'
+                }`}
+              >
+                <p
+                  className={`text-base md:text-lg font-semibold break-words ${
+                    gameState.isCorrect ? 'text-green-300' : 'text-red-300'
+                  }`}
+                >
+                  {gameState.isCorrect
+                    ? '✓ Correct!'
+                    : `✗ Incorrect. The correct answer was: ${decodeHtml(
+                        currentQuestion.correct_answer
+                      )}`}
                 </p>
               </div>
             )}
           </div>
 
-          {/* Answers Card - Right side on desktop (1 column) */}
+          {/* Answers card */}
           <div className="col-span-1 flex flex-col">
             <div className="bg-gradient-to-br from-gray-900/90 to-gray-800/90 backdrop-blur-lg border border-purple-500/30 rounded-2xl md:rounded-3xl p-6 md:p-8 lg:p-10 shadow-2xl flex flex-col min-h-[600px]">
-              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-4 md:mb-6">Answers</h3>
-              
-              {/* Answers */}
+              <h3 className="text-lg md:text-xl lg:text-2xl font-bold text-white mb-4 md:mb-6">
+                Answers
+              </h3>
+
               <div className="flex flex-col gap-3 md:gap-4 flex-grow">
                 {shuffledAnswers.map((answer, index) => {
                   const isSelected = gameState.selectedAnswer === answer;
                   const isCorrect = answer === currentQuestion.correct_answer;
                   const showCorrect = gameState.showResult && isCorrect;
-                  const showIncorrect = gameState.showResult && isSelected && !isCorrect;
+                  const showIncorrect =
+                    gameState.showResult && isSelected && !isCorrect;
 
-                  let buttonClass = "p-4 md:p-5 lg:p-6 rounded-xl md:rounded-2xl font-semibold text-left transition-all transform hover:scale-105 text-sm md:text-base lg:text-lg flex-shrink-0 ";
-                  
+                  let buttonClass =
+                    'p-4 md:p-5 lg:p-6 rounded-xl md:rounded-2xl font-semibold text-left transition-all transform hover:scale-105 text-sm md:text-base lg:text-lg flex-shrink-0 ';
+
                   if (gameState.showResult) {
                     if (showCorrect) {
-                      buttonClass += "bg-green-500/30 border-2 border-green-500 text-green-300";
+                      buttonClass +=
+                        'bg-green-500/30 border-2 border-green-500 text-green-300';
                     } else if (showIncorrect) {
-                      buttonClass += "bg-red-500/30 border-2 border-red-500 text-red-300";
+                      buttonClass +=
+                        'bg-red-500/30 border-2 border-red-500 text-red-300';
                     } else {
-                      buttonClass += "bg-gray-800/50 border border-gray-700 text-gray-400 opacity-60";
+                      buttonClass +=
+                        'bg-gray-800/50 border border-gray-700 text-gray-400 opacity-60';
                     }
                   } else {
-                    buttonClass += "bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-white hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400/50";
+                    buttonClass +=
+                      'bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500/30 text-white hover:from-purple-600/30 hover:to-pink-600/30 hover:border-purple-400/50';
                   }
 
                   return (
@@ -382,21 +420,23 @@ export default function TriviaGame() {
                         <span className="mr-3 text-lg md:text-xl lg:text-2xl flex-shrink-0">
                           {String.fromCharCode(65 + index)}.
                         </span>
-                        <span className="break-words">{decodeHtml(answer)}</span>
+                        <span className="break-words">
+                          {decodeHtml(answer)}
+                        </span>
                       </span>
                     </button>
                   );
                 })}
               </div>
 
-              {/* Next Button - At bottom of answers card */}
               {gameState.showResult && (
                 <button
                   onClick={handleNextQuestion}
                   className="mt-auto px-6 py-3 md:px-8 cursor-pointer md:py-4 lg:px-10 lg:py-5 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl md:rounded-2xl font-bold text-base md:text-lg hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-105 shadow-lg w-full"
                 >
-                  {gameState.currentQuestionIndex < gameState.questions.length - 1 
-                    ? 'Next Question' 
+                  {gameState.currentQuestionIndex <
+                  gameState.questions.length - 1
+                    ? 'Next Question'
                     : 'Finish Game'}
                 </button>
               )}
@@ -404,15 +444,11 @@ export default function TriviaGame() {
           </div>
         </div>
 
-        {/* New Game Button */}
+        {/* New Game Button (extra control if you want it somewhere else too) */}
         <div className="w-full">
           <NewGame onStartNewGame={handleNewGame} />
         </div>
       </div>
-=======
-    <div>
-      <NewGame/>
->>>>>>> 453272f01425b8e529ce34c03512fd4bad61b1e3
     </div>
   );
 }
